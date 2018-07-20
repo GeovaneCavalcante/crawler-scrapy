@@ -15,9 +15,9 @@ class CrawlerAnimes(object):
     db  = conection['api_animes']
 
     #Busca todos animes da pagina 1
-    def getAnimes(self):
-  
-        r  = requests.get('https://www.animesorion.tv/animes-dublados')  
+    def getAnimes(self, url):
+        
+        r  = requests.get(url)  
         soup = bs(r.content, 'html.parser')
         
         divAnimesDublados = soup.find_all("div", class_="contentBox")
@@ -30,6 +30,7 @@ class CrawlerAnimes(object):
             else:
                 self.animes.append(link1)   
 
+                
         ''' Comenta isso pra fazer uma requisição pequena
         for link in divAnimesDublados[0].find_all('a'):
             if link.get('class') == ['number']:
@@ -98,14 +99,3 @@ class CrawlerAnimes(object):
 
         return ep
 
-
-    def insertAnimes(self):
-
-        for anime in self.animesAll:
-            self.db.animes.insert_one(self.animesAll[anime]).inserted_id
-
-
-    def printJson(self):
-
-        for x in self.db.animes.find():
-            pprint.pprint(x)
